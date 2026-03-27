@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Muro Spa">
+<title>Muro Spa</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f2;--surface:#fff;--olive-light:#c8d4b0;--olive-mid:#8a9e6a;
+  --olive-dark:#4a5e35;--olive-deep:#2e3b20;--text:#1a1e14;--muted:#7a8270;
+  --border:#e0e5d6;--danger:#b85450;--danger-bg:#fdf1f0;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--olive-deep)}
+.logo span{font-style:italic;color:var(--olive-mid)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-date{font-size:12px;color:var(--muted)}
+.tasa-pill{font-size:11px;background:var(--bg);border:1px solid var(--border);padding:3px 10px;color:var(--olive-dark);font-weight:500}
+.main{padding:20px;padding-bottom:96px;max-width:480px;margin:0 auto}
+.screen{display:none}.screen.active{display:block}
+.label{font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.stat{background:var(--surface);border:1px solid var(--border);padding:16px 18px}
+.stat-l{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stat-v{font-size:24px;font-weight:300}
+.stat-v.pos{color:var(--olive-dark)}.stat-v.neg{color:var(--danger)}
+.stat-wide{grid-column:1/-1;background:var(--olive-deep);padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.stat-wide .stat-l{color:rgba(255,255,255,.5);margin:0}
+.stat-wide .stat-v{color:#fff;font-size:26px}
+.card{background:var(--surface);border:1px solid var(--border);padding:20px;margin-bottom:14px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;outline:none;transition:border-color .15s;-webkit-appearance:none;border-radius:0}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--olive-mid);background:#fff}
+.field textarea{resize:vertical;min-height:70px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{width:100%;padding:13px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border:none;background:var(--olive-deep);color:#fff;transition:all .15s;border-radius:0}
+.btn:hover{background:var(--olive-dark)}.btn:active{transform:scale(.99)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.qbtn{background:var(--surface);border:1px solid var(--border);padding:16px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;text-align:left;transition:all .15s;display:flex;flex-direction:column;gap:8px}
+.qbtn:hover{background:var(--olive-deep);color:#fff;border-color:var(--olive-deep)}
+.qbtn:hover .qi{color:rgba(255,255,255,.6)}
+.qi{font-size:16px;color:var(--olive-mid)}
+.item{background:var(--surface);border:1px solid var(--border);padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.item-l{flex:1;min-width:0}
+.item-name{font-size:14px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-sub{font-size:11px;color:var(--muted)}
+.item-amt{font-size:15px}.item-amt.pos{color:var(--olive-dark)}.item-amt.neg{color:var(--danger)}
+.badge{display:inline-block;font-size:9px;padding:2px 7px;letter-spacing:0.06em;text-transform:uppercase;margin-left:6px;vertical-align:middle}
+.badge.pendiente{background:#f5f3e8;color:#8a7a40;border:1px solid #d6cfa0}
+.badge.confirmada{background:#edf2e6;color:var(--olive-dark);border:1px solid var(--olive-light)}
+.badge.cancelada{background:var(--danger-bg);color:var(--danger);border:1px solid #f0c0be}
+.empty{text-align:center;color:var(--muted);font-size:12px;padding:36px 0;letter-spacing:.04em}
+.sync-row{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.sync-status{font-size:11px;color:var(--muted);flex:1}
+.sync-status.ok{color:var(--olive-dark)}.sync-status.err{color:var(--danger)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.dot.ok{background:var(--olive-mid)}.dot.err{background:var(--danger)}
+.dot.loading{background:#f0c060;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--olive-deep);color:#fff;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:10px 22px;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--surface);border-top:1px solid var(--border);z-index:100}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 13px;font-size:9px;color:var(--muted);cursor:pointer;transition:color .15s;border:none;background:none;font-family:'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.nb svg{width:19px;height:19px;stroke-width:1.4}
+.nb.active{color:var(--olive-dark)}.nb.active svg{stroke:var(--olive-dark)}
+hr{border:none;border-top:1px solid var(--border);margin:20px 0}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Muro <span>Spa</span></div>
+  <div class="topbar-right">
+    <div class="tasa-pill" id="tasa-pill">Cargando...</div>
+    <div class="topbar-date" id="navDate"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="main">
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-l">Ingresos hoy</div><div class="stat-v pos" id="d-ing">$0.00</div></div>
+      <div class="stat"><div class="stat-l">Egresos hoy</div><div class="stat-v neg" id="d-egr">$0.00</div></div>
+      <div class="stat-wide"><div class="stat-l">Balance del día</div><div class="stat-v" id="d-bal">$0.00</div></div>
+    </div>
+    <div class="sync-row">
+      <div class="dot" id="sync-dot"></div>
+      <div class="sync-status" id="sync-status">Conectando con Google Sheets...</div>
+    </div>
+    <div class="label">Acceso rápido</div>
+    <div class="quick">
+      <button class="qbtn" onclick="goTo('transacciones')"><span class="qi">＋</span>Venta / Ingreso</button>
+      <button class="qbtn" onclick="goTo('gastos')"><span class="qi">−</span>Gasto / Egreso</button>
+      <button class="qbtn" onclick="goTo('reservaciones')"><span class="qi">◻</span>Reservación</button>
+      <button class="qbtn" onclick="goTo('clientes')"><span class="qi">○</span>Cliente</button>
+    </div>
+    <div class="label">Últimos movimientos</div>
+    <div id="d-lista"><div class="empty">Sin movimientos aún</div></div>
+  </div>
+
+  <!-- VENTAS -->
+  <div class="screen" id="screen-transacciones">
+    <div class="label">Registrar venta</div>
+    <div class="card">
+      <div class="field"><label>Cliente</label><input type="text" id="v-cli" placeholder="Nombre del cliente"></div>
+      <div class="field"><label>Terapia / Servicio</label>
+        <select id="v-terapia">
+          <option value="">Seleccionar...</option>
+          <option>Reconstrucción romana</option><option>Masaje contractura</option>
+          <option>Masaje relajante</option><option>Facial y masaje</option>
+          <option>Descontracturante zona</option><option>Masaje deportivo</option>
+          <option>Paquete spa completo</option><option>Otro</option>
+        </select>
+      </div>
+      <div class="field"><label>Encargado</label>
+        <select id="v-enc"><option>FREDDY</option><option>FYG</option><option>Otro</option></select>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Precio USD</label><input type="number" id="v-precio" placeholder="0.00" step="0.01"></div>
+        <div class="field"><label>Método de pago</label>
+          <select id="v-metodo"><option>Zelle</option><option>Efectivo USD</option><option>Pago móvil</option><option>Transferencia Bs</option></select>
+        </div>
+      </div>
+      <div class="field"><label>Canal</label>
+        <select id="v-canal"><option value="APP">App</option><option>Instagram</option><option>Frecuente</option><option>Referido</option></select>
+      </div>
+      <div class="field"><label>Teléfono (opcional)</label><input type="tel" id="v-tel" placeholder="+58..."></div>
+      <div class="field"><label>Fecha</label><input type="date" id="v-fecha"></div>
+      <button class="btn" id="btn-venta" onclick="guardarVenta()">Registrar venta</button>
+    </div>
+    <div class="label" style="margin-top:24px">Historial</div>
+    <div id="v-lista"><div class="empty">Sin ventas registradas</div></div>
+  </div>
+
+  <!-- GASTOS -->
+  <div class="screen" id="screen-gastos">
+    <div class="label">Registrar gasto</div>
+    <div class="card">
+      <div class="field"><label>Descripción</label><input type="text" id="g-desc" placeholder="Ej: Compra de aceites"></div>
+      <div class="field"><label>Categoría</label>
+        <select id="g-cat">
+          <option value="">Seleccionar...</option>
+          <option>Insumos / productos</option><option>Nómina</option>
+          <option>Servicios (agua, luz)</option><option>Mantenimiento</option>
+          <option>Marketing</option><option>Otro egreso</option>
+        </select>
+      </div>
+      <div class="field"><label>Encargado</label>
+        <select id="g-enc"><option>FREDDY</option><option>FYG</option><option>Administración</option></select>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Monto USD</label><input type="number" id="g-usd" placeholder="0.00" step="0.01"></div>
+        <div class="field"><label>Monto Bs</label><input type="number" id="g-bs" placeholder="0.00" step="0.01"></div>
+      </div>
+      <div class="field"><label>Método de pago</label>
+        <select id="g-metodo"><option>Efectivo USD</option><option>Zelle</option><option>Pago móvil</option><option>Transferencia Bs</option></select>
+      </div>
+      <div class="field"><label>Fecha</label><input type="date" id="g-fecha"></div>
+      <button class="btn" id="btn-gasto" onclick="guardarGasto()">Registrar gasto</button>
+    </div>
+    <div class="label" style="margin-top:24px">Historial</div>
+    <div id="g-lista"><div class="empty">Sin gastos registrados</div></div>
+  </div>
+
+  <!-- RESERVACIONES -->
+  <div class="screen" id="screen-reservaciones">
+    <div class="label">Nueva reservación</div>
+    <div class="card">
+      <div class="field"><label>Cliente</label><input type="text" id="r-cli" placeholder="Nombre completo"></div>
+      <div class="field"><label>Teléfono</label><input type="tel" id="r-tel" placeholder="+58..."></div>
+      <div class="field"><label>Servicio</label>
+        <select id="r-svc"><option value="">Seleccionar...</option>
+          <option>Reconstrucción romana</option><option>Masaje contractura</option>
+          <option>Masaje relajante</option><option>Facial y masaje</option>
+          <option>Paquete spa completo</option><option>Otro</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Fecha</label><input type="date" id="r-fecha"></div>
+        <div class="field"><label>Hora</label><input type="time" id="r-hora"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Monto USD</label><input type="number" id="r-monto" placeholder="0.00" step="0.01"></div>
+        <div class="field"><label>Estado</label>
+          <select id="r-est"><option value="pendiente">Pendiente</option><option value="confirmada">Confirmada</option><option value="cancelada">Cancelada</option></select>
+        </div>
+      </div>
+      <div class="field"><label>Notas</label><textarea id="r-notas" placeholder="Indicaciones especiales..."></textarea></div>
+      <button class="btn" onclick="saveRes()">Guardar reservación</button>
+    </div>
+    <div class="label" style="margin-top:24px">Próximas reservaciones</div>
+    <div id="r-lista"><div class="empty">Sin reservaciones</div></div>
+  </div>
+
+  <!-- CLIENTES -->
+  <div class="screen" id="screen-clientes">
+    <div class="label">Nuevo cliente</div>
+    <div class="card">
+      <div class="field"><label>Nombre completo</label><input type="text" id="c-nom" placeholder="Nombre y apellido"></div>
+      <div class="field-row">
+        <div class="field"><label>Teléfono</label><input type="tel" id="c-tel" placeholder="+58..."></div>
+        <div class="field"><label>Cédula</label><input type="text" id="c-ced" placeholder="V-..."></div>
+      </div>
+      <div class="field"><label>Servicio favorito</label>
+        <select id="c-svc"><option value="">Seleccionar...</option>
+          <option>Reconstrucción romana</option><option>Masaje contractura</option>
+          <option>Masaje relajante</option><option>Facial y masaje</option><option>Paquete spa completo</option>
+        </select>
+      </div>
+      <div class="field"><label>Notas / alergias</label><textarea id="c-notas" placeholder="Condiciones, preferencias..."></textarea></div>
+      <button class="btn" onclick="saveCli()">Guardar cliente</button>
+    </div>
+    <div class="label" style="margin-top:24px">Directorio</div>
+    <div id="c-lista"><div class="empty">Sin clientes registrados</div></div>
+  </div>
+
+</div>
+
+<nav class="bottom-nav">
+  <button class="nb active" id="nav-home" onclick="goTo('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12L12 3l9 9M5 10v10h5v-5h4v5h5V10"/></svg>Inicio
+  </button>
+  <button class="nb" id="nav-transacciones" onclick="goTo('transacciones')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Ventas
+  </button>
+  <button class="nb" id="nav-gastos" onclick="goTo('gastos')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>Gastos
+  </button>
+  <button class="nb" id="nav-reservaciones" onclick="goTo('reservaciones')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Reservas
+  </button>
+  <button class="nb" id="nav-clientes" onclick="goTo('clientes')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Clientes
+  </button>
+</nav>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwo0UmnI18OG5B2Ta2jYQtXoBwwfchLjIcXjMwK4qgVAGPa6v9l_Z7ncm2_gtq7DqsLdQ/exec';
+let D = {ventas:[],gastos:[],res:[],cli:[]};
+try{D=JSON.parse(localStorage.getItem('muro_v3')||'{"ventas":[],"gastos":[],"res":[],"cli":[]}')}catch(e){}
+const save=()=>{try{localStorage.setItem('muro_v3',JSON.stringify(D))}catch(e){}};
+const fmt=n=>'$'+parseFloat(n||0).toFixed(2);
+const today=()=>new Date().toISOString().split('T')[0];
+
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function setSyncStatus(s,m){document.getElementById('sync-dot').className='dot '+s;const el=document.getElementById('sync-status');el.className='sync-status '+s;el.textContent=m}
+
+function goTo(s){
+  document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(e=>e.classList.remove('active'));
+  document.getElementById('screen-'+s).classList.add('active');
+  document.getElementById('nav-'+s).classList.add('active');
+  if(s==='home')renderHome();
+}
+
+document.getElementById('navDate').textContent=new Date().toLocaleDateString('es-VE',{weekday:'short',day:'numeric',month:'short'});
+document.getElementById('v-fecha').value=today();
+document.getElementById('g-fecha').value=today();
+document.getElementById('r-fecha').value=today();
+
+function jsonp(url, cb) {
+  const name = 'cb_' + Date.now();
+  window[name] = function(d) { cb(d); delete window[name]; document.getElementById('_jsonp_script')?.remove(); };
+  const s = document.createElement('script');
+  s.id = '_jsonp_script';
+  s.src = url + '&callback=' + name;
+  document.body.appendChild(s);
+  s.onerror = function() { cb(null); };
+}
+
+function cargarTasa(){
+  setSyncStatus('loading','Conectando con Google Sheets...');
+  jsonp(SCRIPT_URL+'?action=getTasa', function(d){
+    if(d&&d.ok&&d.tasa){
+      document.getElementById('tasa-pill').textContent='BCV: Bs '+parseFloat(d.tasa).toFixed(2);
+      setSyncStatus('ok','Conectado · Google Sheets activo');
+      cargarResumen();
+    }else{
+      setSyncStatus('err','Sin conexión con Sheets');
+      document.getElementById('tasa-pill').textContent='Sin conexión';
+    }
+  });
+}
+
+function cargarResumen(){
+  jsonp(SCRIPT_URL+'?action=getResumen', function(d){
+    if(d&&d.ok){
+      document.getElementById('d-ing').textContent=fmt(d.totalVentas);
+      document.getElementById('d-egr').textContent=fmt(d.totalGastos);
+      const bal=parseFloat(d.balance);
+      const be=document.getElementById('d-bal');
+      be.textContent=(bal<0?'-':'')+fmt(Math.abs(bal));
+      be.style.color=bal<0?'#f0a090':'#fff';
+    }
+  });
+}
+
+async function guardarVenta(){
+  const precio=document.getElementById('v-precio').value;
+  const cli=document.getElementById('v-cli').value.trim();
+  if(!precio||!cli){toast('Completa cliente y precio');return}
+  const btn=document.getElementById('btn-venta');
+  btn.disabled=true;btn.textContent='Guardando...';
+  const payload={action:'registrarVenta',cliente:cli,terapia:document.getElementById('v-terapia').value,encargado:document.getElementById('v-enc').value,precio:parseFloat(precio),metodo_pago:document.getElementById('v-metodo').value,canal:document.getElementById('v-canal').value,numero:document.getElementById('v-tel').value,fecha:document.getElementById('v-fecha').value,moneda:'USD'};
+  try{
+    const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});
+    const d=await r.json();
+    if(d.ok){D.ventas.unshift({...payload,id:Date.now()});save();renderVentas();renderHome();['v-cli','v-precio','v-tel'].forEach(id=>document.getElementById(id).value='');document.getElementById('v-terapia').value='';document.getElementById('v-fecha').value=today();toast('✓ Venta guardada en Sheets')}
+    else{toast('Error: '+(d.msg||'intenta de nuevo'))}
+  }catch(e){toast('Sin conexión — guardado local');D.ventas.unshift({...payload,id:Date.now(),local:true});save();renderVentas()}
+  btn.disabled=false;btn.textContent='Registrar venta';
+}
+
+async function guardarGasto(){
+  const usd=document.getElementById('g-usd').value;
+  const desc=document.getElementById('g-desc').value.trim();
+  if(!usd||!desc){toast('Completa descripción y monto');return}
+  const btn=document.getElementById('btn-gasto');
+  btn.disabled=true;btn.textContent='Guardando...';
+  const payload={action:'registrarGasto',descripcion:desc,categoria:document.getElementById('g-cat').value,encargado:document.getElementById('g-enc').value,monto_usd:parseFloat(usd),monto_bs:document.getElementById('g-bs').value||'',metodo_pago:document.getElementById('g-metodo').value,fecha:document.getElementById('g-fecha').value};
+  try{
+    const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});
+    const d=await r.json();
+    if(d.ok){D.gastos.unshift({...payload,id:Date.now()});save();renderGastos();renderHome();['g-desc','g-usd','g-bs'].forEach(id=>document.getElementById(id).value='');document.getElementById('g-cat').value='';document.getElementById('g-fecha').value=today();toast('✓ Gasto guardado en Sheets')}
+    else{toast('Error: '+(d.msg||'intenta de nuevo'))}
+  }catch(e){toast('Sin conexión — guardado local');D.gastos.unshift({...payload,id:Date.now(),local:true});save();renderGastos()}
+  btn.disabled=false;btn.textContent='Registrar gasto';
+}
+
+function saveRes(){
+  const cli=document.getElementById('r-cli').value.trim();
+  const svc=document.getElementById('r-svc').value;
+  const fecha=document.getElementById('r-fecha').value;
+  if(!cli||!svc||!fecha){toast('Completa los campos');return}
+  D.res.unshift({id:Date.now(),cli,tel:document.getElementById('r-tel').value,svc,fecha,hora:document.getElementById('r-hora').value,monto:parseFloat(document.getElementById('r-monto').value||0),est:document.getElementById('r-est').value,notas:document.getElementById('r-notas').value});
+  save();renderRes();['r-cli','r-tel','r-hora','r-notas','r-monto'].forEach(id=>document.getElementById(id).value='');document.getElementById('r-svc').value='';document.getElementById('r-est').value='pendiente';document.getElementById('r-fecha').value=today();toast('Reservación guardada');
+}
+
+function saveCli(){
+  const nom=document.getElementById('c-nom').value.trim();
+  if(!nom){toast('Ingresa el nombre');return}
+  D.cli.unshift({id:Date.now(),nom,tel:document.getElementById('c-tel').value,ced:document.getElementById('c-ced').value,svc:document.getElementById('c-svc').value,notas:document.getElementById('c-notas').value});
+  save();renderCli();['c-nom','c-tel','c-ced','c-notas'].forEach(id=>document.getElementById(id).value='');document.getElementById('c-svc').value='';toast('Cliente guardado');
+}
+
+function renderVentas(){const el=document.getElementById('v-lista');if(!D.ventas.length){el.innerHTML='<div class="empty">Sin ventas registradas</div>';return}el.innerHTML=D.ventas.slice(0,10).map(v=>`<div class="item"><div class="item-l"><div class="item-name">${v.cliente}${v.local?'<span class="badge pendiente">local</span>':''}</div><div class="item-sub">${v.terapia||'—'} · ${v.fecha}</div></div><div class="item-amt pos">+${fmt(v.precio)}</div></div>`).join('')}
+function renderGastos(){const el=document.getElementById('g-lista');if(!D.gastos.length){el.innerHTML='<div class="empty">Sin gastos registrados</div>';return}el.innerHTML=D.gastos.slice(0,10).map(g=>`<div class="item"><div class="item-l"><div class="item-name">${g.descripcion}${g.local?'<span class="badge pendiente">local</span>':''}</div><div class="item-sub">${g.categoria||'—'} · ${g.fecha}</div></div><div class="item-amt neg">-${fmt(g.monto_usd)}</div></div>`).join('')}
+function renderRes(){const el=document.getElementById('r-lista');if(!D.res.length){el.innerHTML='<div class="empty">Sin reservaciones</div>';return}el.innerHTML=D.res.map(r=>`<div class="item"><div class="item-l"><div class="item-name">${r.cli}<span class="badge ${r.est}">${r.est}</span></div><div class="item-sub">${r.svc} · ${r.fecha}${r.hora?' '+r.hora:''}</div></div><div class="item-amt">${r.monto?fmt(r.monto):'—'}</div></div>`).join('')}
+function renderCli(){const el=document.getElementById('c-lista');if(!D.cli.length){el.innerHTML='<div class="empty">Sin clientes registrados</div>';return}el.innerHTML=D.cli.map(c=>`<div class="item"><div class="item-l"><div class="item-name">${c.nom}</div><div class="item-sub">${c.tel||'—'} · ${c.svc||'Sin preferencia'}</div></div><div style="font-size:11px;color:var(--muted)">${c.ced||''}</div></div>`).join('')}
+
+function renderHome(){
+  renderVentas();renderGastos();
+  const ult=[...D.ventas.slice(0,3).map(v=>({...v,tipo:'venta'})),...D.gastos.slice(0,3).map(g=>({...g,tipo:'gasto'}))].sort((a,b)=>b.id-a.id).slice(0,6);
+  const dl=document.getElementById('d-lista');
+  if(!ult.length){dl.innerHTML='<div class="empty">Sin movimientos aún</div>';return}
+  dl.innerHTML=ult.map(m=>`<div class="item"><div class="item-l"><div class="item-name">${m.tipo==='venta'?m.cliente:m.descripcion}</div><div class="item-sub">${m.tipo==='venta'?(m.terapia||'—'):(m.categoria||'—')} · ${m.fecha}</div></div><div class="item-amt ${m.tipo==='venta'?'pos':'neg'}">${m.tipo==='venta'?'+':'-'}${fmt(m.tipo==='venta'?m.precio:m.monto_usd)}</div></div>`).join('');
+}
+
+renderHome();renderRes();renderCli();
+cargarTasa();
+</script>
+</body>
+</html>
