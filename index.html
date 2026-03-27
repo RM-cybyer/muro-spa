@@ -270,24 +270,33 @@ document.getElementById('v-fecha').value=today();
 document.getElementById('g-fecha').value=today();
 document.getElementById('r-fecha').value=today();
 
-async function cargarTasa(){
+function jsonp(url, cb) {
+  const name = 'cb_' + Date.now();
+  window[name] = function(d) { cb(d); delete window[name]; document.getElementById('_jsonp_script')?.remove(); };
+  const s = document.createElement('script');
+  s.id = '_jsonp_script';
+  s.src = url + '&callback=' + name;
+  document.body.appendChild(s);
+  s.onerror = function() { cb(null); };
+}
+
+function cargarTasa(){
   setSyncStatus('loading','Conectando con Google Sheets...');
-  try{
-    const r=await fetch(SCRIPT_URL+'?action=getTasa');
-    const d=await r.json();
-    if(d.ok&&d.tasa){
+  jsonp(SCRIPT_URL+'?action=getTasa', function(d){
+    if(d&&d.ok&&d.tasa){
       document.getElementById('tasa-pill').textContent='BCV: Bs '+parseFloat(d.tasa).toFixed(2);
       setSyncStatus('ok','Conectado · Google Sheets activo');
       cargarResumen();
-    }else{setSyncStatus('err','Error al leer tasa')}
-  }catch(e){setSyncStatus('err','Sin conexión con Sheets');document.getElementById('tasa-pill').textContent='Sin conexión'}
+    }else{
+      setSyncStatus('err','Sin conexión con Sheets');
+      document.getElementById('tasa-pill').textContent='Sin conexión';
+    }
+  });
 }
 
-async function cargarResumen(){
-  try{
-    const r=await fetch(SCRIPT_URL+'?action=getResumen');
-    const d=await r.json();
-    if(d.ok){
+function cargarResumen(){
+  jsonp(SCRIPT_URL+'?action=getResumen', function(d){
+    if(d&&d.ok){
       document.getElementById('d-ing').textContent=fmt(d.totalVentas);
       document.getElementById('d-egr').textContent=fmt(d.totalGastos);
       const bal=parseFloat(d.balance);
@@ -295,7 +304,7 @@ async function cargarResumen(){
       be.textContent=(bal<0?'-':'')+fmt(Math.abs(bal));
       be.style.color=bal<0?'#f0a090':'#fff';
     }
-  }catch(e){}
+  });
 }
 
 async function guardarVenta(){
