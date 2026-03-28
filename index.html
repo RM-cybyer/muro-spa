@@ -127,14 +127,13 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
       <div class="field"><label>Encargado</label>
         <select id="v-enc"><option>FREDDY</option><option>FYG</option><option>Otro</option></select>
       </div>
-      <div class="field-row">
+      <div class="field"><label>Método de pago</label>
+  <select id="v-metodo" onchange="actualizarMonto()"><option>Zelle</option><option>Zinli</option><option>Binance</option><option>PayPal</option><option>Divisas Efectivo</option><option>Pago móvil</option><option>Transferencia</option></select>
+</div>
+<div class="field-row">
   <div class="field" id="campo-usd"><label>Precio USD</label><input type="number" id="v-precio" placeholder="0.00" step="0.01"></div>
   <div class="field" id="campo-bs" style="display:none"><label>Monto Bs</label><input type="number" id="v-precio-bs" placeholder="0.00" step="0.01"></div>
 </div>
-        <div class="field"><label>Método de pago</label>
-          <select id="v-metodo" onchange="actualizarMonto()"><option>Zelle</option><option>Zinli</option><option>Binance</option><option>PayPal</option><option>Divisas Efectivo</option><option>Pago móvil</option><option>Transferencia</option></select>>
-        </div>
-      </div>
       <div class="field"><label>Canal</label>
         <select id="v-canal"><option value="APP">App</option><option>Instagram</option><option>Frecuente</option><option>Referido</option></select>
       </div>
@@ -162,13 +161,13 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
       <div class="field"><label>Encargado</label>
         <select id="g-enc"><option>FREDDY</option><option>FYG</option><option>Administración</option></select>
       </div>
-      <div class="field-row">
+     <div class="field"><label>Método de pago</label>
+  <select id="g-metodo" onchange="actualizarMontoGasto()"><option>Efectivo USD</option><option>Zelle</option><option>Zinli</option><option>Binance</option><option>PayPal</option><option>Divisas Efectivo</option><option>Pago móvil</option><option>Transferencia</option></select>
+</div>
+<div class="field-row">
   <div class="field" id="g-campo-usd"><label>Monto USD</label><input type="number" id="g-usd" placeholder="0.00" step="0.01"></div>
   <div class="field" id="g-campo-bs" style="display:none"><label>Monto Bs</label><input type="number" id="g-bs" placeholder="0.00" step="0.01"></div>
 </div>
-      <div class="field"><label>Método de pago</label>
-        <select id="g-metodo" onchange="actualizarMontoGasto()"><option>Efectivo USD</option><option>Zelle</option><option>Zinli</option><option>Binance</option><option>PayPal</option><option>Divisas Efectivo</option><option>Pago móvil</option><option>Transferencia</option></select>
-      </div>
       <div class="field"><label>Fecha</label><input type="date" id="g-fecha"></div>
       <button class="btn" id="btn-gasto" onclick="guardarGasto()">Registrar gasto</button>
     </div>
