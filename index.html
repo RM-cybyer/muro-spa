@@ -163,11 +163,11 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
         <select id="g-enc"><option>FREDDY</option><option>FYG</option><option>Administración</option></select>
       </div>
       <div class="field-row">
-        <div class="field"><label>Monto USD</label><input type="number" id="g-usd" placeholder="0.00" step="0.01"></div>
-        <div class="field"><label>Monto Bs</label><input type="number" id="g-bs" placeholder="0.00" step="0.01"></div>
-      </div>
+  <div class="field" id="g-campo-usd"><label>Monto USD</label><input type="number" id="g-usd" placeholder="0.00" step="0.01"></div>
+  <div class="field" id="g-campo-bs" style="display:none"><label>Monto Bs</label><input type="number" id="g-bs" placeholder="0.00" step="0.01"></div>
+</div>
       <div class="field"><label>Método de pago</label>
-        <select id="g-metodo"><option>Efectivo USD</option><option>Zelle</option><option>Pago móvil</option><option>Transferencia Bs</option></select>
+        <select id="g-metodo" onchange="actualizarMontoGasto()"><option>Efectivo USD</option><option>Zelle</option><option>Zinli</option><option>Binance</option><option>PayPal</option><option>Divisas Efectivo</option><option>Pago móvil</option><option>Transferencia</option></select>
       </div>
       <div class="field"><label>Fecha</label><input type="date" id="g-fecha"></div>
       <button class="btn" id="btn-gasto" onclick="guardarGasto()">Registrar gasto</button>
@@ -256,6 +256,12 @@ function actualizarMonto(){
   const esBS=metodosBS.includes(m);
   document.getElementById('campo-usd').style.display=esBS?'none':'block';
   document.getElementById('campo-bs').style.display=esBS?'block':'none';
+}
+  function actualizarMontoGasto(){
+  const m=document.getElementById('g-metodo').value;
+  const esBS=metodosBS.includes(m);
+  document.getElementById('g-campo-usd').style.display=esBS?'none':'block';
+  document.getElementById('g-campo-bs').style.display=esBS?'block':'none';
 }
 const SCRIPT_URL = 'https://finexy.app.n8n.cloud/webhook/Ventas-PWA';
 let D = {ventas:[],gastos:[],res:[],cli:[]};
