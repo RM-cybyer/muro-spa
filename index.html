@@ -281,17 +281,18 @@ function jsonp(url, cb) {
 }
 
 function cargarTasa(){
-  setSyncStatus('loading','Conectando con Google Sheets...');
-  jsonp(SCRIPT_URL+'?action=getTasa', function(d){
-    if(d&&d.ok&&d.tasa){
-      document.getElementById('tasa-pill').textContent='BCV: Bs '+parseFloat(d.tasa).toFixed(2);
+  setSyncStatus('loading','Conectando...');
+  fetch('https://api.exchangerate-api.com/v4/latest/USD')
+    .then(r=>r.json())
+    .then(d=>{
+      const tasa=d.rates.VES;
+      document.getElementById('tasa-pill').textContent='BCV: Bs '+tasa.toFixed(2);
       setSyncStatus('ok','Conectado · Google Sheets activo');
-      cargarResumen();
-    }else{
-      setSyncStatus('err','Sin conexión con Sheets');
+    })
+    .catch(()=>{
+      setSyncStatus('err','Sin conexión');
       document.getElementById('tasa-pill').textContent='Sin conexión';
-    }
-  });
+    });
 }
 
 function cargarResumen(){
