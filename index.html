@@ -247,7 +247,7 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
 </nav>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwo0UmnI18OG5B2Ta2jYQtXoBwwfchLjIcXjMwK4qgVAGPa6v9l_Z7ncm2_gtq7DqsLdQ/exec';
+const SCRIPT_URL = 'https://finexy.app.n8n.cloud/webhook/ventas-pwa';
 let D = {ventas:[],gastos:[],res:[],cli:[]};
 try{D=JSON.parse(localStorage.getItem('muro_v3')||'{"ventas":[],"gastos":[],"res":[],"cli":[]}')}catch(e){}
 const save=()=>{try{localStorage.setItem('muro_v3',JSON.stringify(D))}catch(e){}};
