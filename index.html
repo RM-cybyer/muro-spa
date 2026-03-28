@@ -150,13 +150,21 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
     <div class="label">Registrar gasto</div>
     <div class="card">
       <div class="field"><label>Descripción</label><input type="text" id="g-desc" placeholder="Ej: Compra de aceites"></div>
-      <div class="field"><label>Categoría</label>
-        <select id="g-cat">
-          <option value="">Seleccionar...</option>
-          <option>Insumos / productos</option><option>Nómina</option>
-          <option>Servicios (agua, luz)</option><option>Mantenimiento</option>
-          <option>Marketing</option><option>Otro egreso</option>
-        </select>
+      <select id="g-cat" onchange="mostrarOtroGasto()">
+  <option value="">Seleccionar...</option>
+  <option>Farmatodo</option>
+  <option>Publicidad</option>
+  <option>Parafiscales</option>
+  <option>Servicio</option>
+  <option>Condominio</option>
+  <option>Alquiler</option>
+  <option>Delivery</option>
+  <option>Insumos</option>
+  <option>Mercado</option>
+  <option>Comida</option>
+  <option>Otro</option>
+</select>
+<input type="text" id="g-cat-otro" placeholder="Especifica la categoría..." style="display:none;margin-top:8px;width:100%;background:var(--bg);border:1px solid var(--border);padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px">
       </div>
       <div class="field"><label>Encargado</label>
         <select id="g-enc"><option>FREDDY</option><option>FYG</option><option>Administración</option></select>
@@ -261,6 +269,10 @@ function actualizarMonto(){
   const esBS=metodosBS.includes(m);
   document.getElementById('g-campo-usd').style.display=esBS?'none':'block';
   document.getElementById('g-campo-bs').style.display=esBS?'block':'none';
+}
+  function mostrarOtroGasto(){
+  const v=document.getElementById('g-cat').value;
+  document.getElementById('g-cat-otro').style.display=v==='Otro'?'block':'none';
 }
 const SCRIPT_URL = 'https://finexy.app.n8n.cloud/webhook/Ventas-PWA';
 let D = {ventas:[],gastos:[],res:[],cli:[]};
