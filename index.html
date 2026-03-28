@@ -318,7 +318,7 @@ async function guardarVenta(){
   try{
     const r=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const d=await r.json();
-    if(d.ok){D.ventas.unshift({...payload,id:Date.now()});save();renderVentas();renderHome();['v-cli','v-precio','v-tel'].forEach(id=>document.getElementById(id).value='');document.getElementById('v-terapia').value='';document.getElementById('v-fecha').value=today();toast('✓ Venta guardada en Sheets')}
+    if(d.ok||d.success){D.ventas.unshift({...payload,id:Date.now()});save();renderVentas();renderHome();['v-cli','v-precio','v-tel'].forEach(id=>document.getElementById(id).value='');document.getElementById('v-terapia').value='';document.getElementById('v-fecha').value=today();toast('✓ Venta guardada en Sheets')}
     else{toast('Error: '+(d.msg||'intenta de nuevo'))}
   }catch(e){toast('Sin conexión — guardado local');D.ventas.unshift({...payload,id:Date.now(),local:true});save();renderVentas()}
   btn.disabled=false;btn.textContent='Registrar venta';
@@ -334,7 +334,7 @@ async function guardarGasto(){
   try{
     const r=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const d=await r.json();
-    if(d.ok){D.gastos.unshift({...payload,id:Date.now()});save();renderGastos();renderHome();['g-desc','g-usd','g-bs'].forEach(id=>document.getElementById(id).value='');document.getElementById('g-cat').value='';document.getElementById('g-fecha').value=today();toast('✓ Gasto guardado en Sheets')}
+    if(d.ok||d.success){D.gastos.unshift({...payload,id:Date.now()});save();renderGastos();renderHome();['g-desc','g-usd','g-bs'].forEach(id=>document.getElementById(id).value='');document.getElementById('g-cat').value='';document.getElementById('g-fecha').value=today();toast('✓ Gasto guardado en Sheets')}
     else{toast('Error: '+(d.msg||'intenta de nuevo'))}
   }catch(e){toast('Sin conexión — guardado local');D.gastos.unshift({...payload,id:Date.now(),local:true});save();renderGastos()}
   btn.disabled=false;btn.textContent='Registrar gasto';
