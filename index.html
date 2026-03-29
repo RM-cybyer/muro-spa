@@ -116,13 +116,31 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
     <div class="card">
       <div class="field"><label>Cliente</label><input type="text" id="v-cli" placeholder="Nombre del cliente"></div>
       <div class="field"><label>Terapia / Servicio</label>
-        <input type="text" id="v-terapia" placeholder="Ej: Masaje relajante, Facial...">
+        <input type="text" id="v-terapia" placeholder="Selecciona o escribe..." list="lista-terapias">
+<datalist id="lista-terapias">
+  <option>Reconstrucción romana</option>
+  <option>Masaje contractura</option>
+  <option>Masaje relajante</option>
+  <option>Facial y masaje</option>
+  <option>Descontracturante zona</option>
+  <option>Masaje deportivo</option>
+  <option>Paquete spa completo</option>
+</datalist>
       </div>
       <div class="field"><label>Encargado</label>
         <input type="text" id="v-enc" placeholder="Ej: Freddy, FYG...">
      </div>
 <div class="field"><label>Método de pago</label>
-  <input type="text" id="v-metodo" placeholder="Ej: Zelle, Pago móvil...">
+  <input type="text" id="v-metodo" placeholder="Selecciona o escribe..." list="lista-metodos">
+<datalist id="lista-metodos">
+  <option>Zelle</option>
+  <option>Zinli</option>
+  <option>Binance</option>
+  <option>PayPal</option>
+  <option>Divisas Efectivo</option>
+  <option>Pago móvil</option>
+  <option>Transferencia</option>
+</datalist>
 </div>
 <div class="field-row">
   <div class="field" id="campo-usd"><label>Precio USD</label><input type="number" id="v-precio" placeholder="0.00" step="0.01"></div>
@@ -144,8 +162,8 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
     <div class="label">Registrar gasto</div>
     <div class="card">
       <div class="field"><label>Descripción</label><input type="text" id="g-desc" placeholder="Ej: Compra de aceites"></div>
-      <select id="g-cat" onchange="mostrarOtroGasto()">
-  <option value="">Seleccionar...</option>
+     <input type="text" id="g-cat" placeholder="Selecciona o escribe..." list="lista-categorias">
+<datalist id="lista-categorias">
   <option>Farmatodo</option>
   <option>Publicidad</option>
   <option>Parafiscales</option>
@@ -156,8 +174,7 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
   <option>Insumos</option>
   <option>Mercado</option>
   <option>Comida</option>
-  <option>Otro</option>
-</select>
+</datalist>
 <input type="text" id="g-cat-otro" placeholder="Especifica la categoría..." style="display:none;margin-top:8px;width:100%;background:var(--bg);border:1px solid var(--border);padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px">
       </div>
      <div class="field"><label>Encargado</label>
