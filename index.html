@@ -259,6 +259,7 @@ function goTo(s){
   document.getElementById('screen-'+s).classList.add('active');
   document.getElementById('nav-'+s).classList.add('active');
   if(s==='home')renderHome();
+  if(s==='resumen')renderResumen();
 }
 
 document.getElementById('navDate').textContent=new Date().toLocaleDateString('es-VE',{weekday:'short',day:'numeric',month:'short'});
@@ -359,12 +360,19 @@ function renderGastos(){const el=document.getElementById('g-lista');if(!D.gastos
 function renderRes(){const el=document.getElementById('r-lista');if(!D.res.length){el.innerHTML='<div class="empty">Sin reservaciones</div>';return}el.innerHTML=D.res.map(r=>`<div class="item"><div class="item-l"><div class="item-name">${r.cli}<span class="badge ${r.est}">${r.est}</span></div><div class="item-sub">${r.svc} · ${r.fecha}${r.hora?' '+r.hora:''}</div></div><div class="item-amt">${r.monto?fmt(r.monto):'—'}</div></div>`).join('')}
 function renderCli(){const el=document.getElementById('c-lista');if(!D.cli.length){el.innerHTML='<div class="empty">Sin clientes registrados</div>';return}el.innerHTML=D.cli.map(c=>`<div class="item"><div class="item-l"><div class="item-name">${c.nom}</div><div class="item-sub">${c.tel||'—'} · ${c.svc||'Sin preferencia'}</div></div><div style="font-size:11px;color:var(--muted)">${c.ced||''}</div></div>`).join('')}
 
-function renderHome(){
-  renderVentas();renderGastos();
-  const ult=[...D.ventas.slice(0,3).map(v=>({...v,tipo:'venta'})),...D.gastos.slice(0,3).map(g=>({...g,tipo:'gasto'}))].sort((a,b)=>b.id-a.id).slice(0,6);
-  const dl=document.getElementById('d-lista');
-  if(!ult.length){dl.innerHTML='<div class="empty">Sin movimientos aún</div>';return}
-  dl.innerHTML=ult.map(m=>`<div class="item"><div class="item-l"><div class="item-name">${m.tipo==='venta'?m.cliente:m.descripcion}</div><div class="item-sub">${m.tipo==='venta'?(m.terapia||'—'):(m.categoria||'—')} · ${m.fecha}</div></div><div class="item-amt ${m.tipo==='venta'?'pos':'neg'}">${m.tipo==='venta'?'+':'-'}${fmt(m.tipo==='venta'?m.precio:m.monto_usd)}</div></div>`).join('');
+function renderResumen(){
+  const totalV=D.ventas.reduce((a,v)=>a+parseFloat(v.precio||0),0);
+  const totalG=D.gastos.reduce((a,g)=>a+parseFloat(g.monto_usd||0),0);
+  const bal=totalV-totalG;
+  document.getElementById('r-ingresos').textContent=fmt(totalV);
+  document.getElementById('r-egresos').textContent=fmt(totalG);
+  const rb=document.getElementById('r-balance');
+  rb.textContent=(bal<0?'-':'')+fmt(Math.abs(bal));
+  rb.style.color=bal<0?'#f0a090':'#fff';
+  const rv=document.getElementById('r-ventas');
+  rv.innerHTML=D.ventas.slice(0,5).map(v=>`<div class="item"><div class="item-l"><div class="item-name">${v.cliente}</div><div class="item-sub">${v.terapia||'—'} · ${v.fecha}</div></div><div class="item-amt pos">+${fmt(v.precio)}</div></div>`).join('')||'<div class="empty">Sin ventas</div>';
+  const rg=document.getElementById('r-gastos');
+  rg.innerHTML=D.gastos.slice(0,5).map(g=>`<div class="item"><div class="item-l"><div class="item-name">${g.categoria||'—'}</div><div class="item-sub">${g.metodo_pago||'—'} · ${g.fecha}</div></div><div class="item-amt neg">-${fmt(g.monto_usd)}</div></div>`).join('')||'<div class="empty">Sin gastos</div>';
 }
 
 renderHome();renderRes();renderCli();
