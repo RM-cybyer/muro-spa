@@ -131,7 +131,7 @@ hr{border:none;border-top:1px solid var(--border);margin:20px 0}
         <input type="text" id="v-enc" placeholder="Ej: Freddy, FYG...">
      </div>
 <div class="field"><label>Método de pago</label>
-  <input type="text" id="v-metodo" placeholder="Selecciona o escribe..." list="lista-metodos">
+  <input type="text" id="v-metodo" placeholder="Selecciona o escribe..." list="lista-metodos" oninput="actualizarMonto()">
 <datalist id="lista-metodos">
   <option>Zelle</option>
   <option>Zinli</option>
