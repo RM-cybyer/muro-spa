@@ -410,7 +410,7 @@ body{font-family:'Outfit',sans-serif;font-weight:400;background:var(--bg);color:
 <script>
 let tasaUSD=471.7,tasaEUR=543.4;
 const metodosBS=['Pago móvil','Transferencia'];
-const SCRIPT_URL='https://finexy.app.n8n.cloud/webhook/Ventas-PWA';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbx_VUF06zt4ZQkcKufyRQHPiTAqkIPTRU0GbgU67Ickm5P56iRdZx8w01pdZ03YzaEDKQ/exec';
 let D={ventas:[],gastos:[]};
 try{D=JSON.parse(localStorage.getItem('muro_v3')||'{"ventas":[],"gastos":[]}')}catch(e){}
 const save=()=>{try{localStorage.setItem('muro_v3',JSON.stringify(D))}catch(e){}};
